@@ -59,24 +59,37 @@ runcmd(struct cmd *cmd)
 
   case ' ':
     ecmd = (struct execcmd*)cmd;
+    
     if(ecmd->argv[0] == 0)
       _exit(0);
-    fprintf(stderr, "exec not implemented\n");
-    // Your code here ...
+    if(execvp(ecmd->argv[0], ecmd->argv) < 0)
+      fprintf(stderr, "exec failed.\n");
     break;
 
   case '>':
   case '<':
     rcmd = (struct redircmd*)cmd;
-    fprintf(stderr, "redir not implemented\n");
-    // Your code here ...
+    
+    close(rcmd->fd);
+    if(open(rcmd->file, rcmd->flags, 777) < 0)
+    {
+      fprintf(stderr, "open file failed.\n");
+      break;
+    }
     runcmd(rcmd->cmd);
     break;
 
   case '|':
     pcmd = (struct pipecmd*)cmd;
-    fprintf(stderr, "pipe not implemented\n");
-    // Your code here ...
+    
+    int p[2];
+    if(pipe(p) < 0)
+    {
+      fprintf(stderr, "pipe failed.\n");
+      break;
+    }
+
+    
     break;
   }    
   _exit(0);
