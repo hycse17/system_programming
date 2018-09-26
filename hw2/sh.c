@@ -71,7 +71,7 @@ runcmd(struct cmd *cmd)
     rcmd = (struct redircmd*)cmd;
     
     close(rcmd->fd);
-    if(open(rcmd->file, rcmd->flags, 777) < 0)
+    if(open(rcmd->file, rcmd->flags, 0777) < 0)
     {
       fprintf(stderr, "open file failed.\n");
       break;
