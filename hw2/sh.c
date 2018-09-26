@@ -88,7 +88,19 @@ runcmd(struct cmd *cmd)
       fprintf(stderr, "pipe failed.\n");
       break;
     }
-
+    
+    if(fork() == 0)
+    {
+      dup2(p[1], 1);
+      close(p[0]);
+      runcmd(pcmd->left);
+    }
+    else
+    {
+      dup2(p[0], 0);
+      close(p[1]);
+      runcmd(pcmd->right);
+    }
     
     break;
   }    
